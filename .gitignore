@@ -3,9 +3,10 @@ build/
 cmake-build-*/
 compile_commands.json
 
-# IDE
+# IDE / tooling caches
 .vscode/
 .idea/
+.cache/
 *.swp
 *~
 
