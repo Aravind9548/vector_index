@@ -5,6 +5,7 @@ add_executable(vecidx_tests
   snapshot_test.cpp
   hnsw_test.cpp
   filtered_test.cpp
+  service_test.cpp
 )
 
 target_link_libraries(vecidx_tests

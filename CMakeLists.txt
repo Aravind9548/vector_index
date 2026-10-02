@@ -73,6 +73,13 @@ if(VECIDX_BUILD_TESTS)
   add_subdirectory(tests)
 endif()
 
+# ---------------------------------------------------------------------------
+# Server executable (without gRPC for now — just the service layer + main)
+# ---------------------------------------------------------------------------
+add_executable(vecidx_server src/server_main.cpp)
+target_link_libraries(vecidx_server PRIVATE vecidx_core)
+target_compile_options(vecidx_server PRIVATE ${VECIDX_WARNING_FLAGS})
+
 if(VECIDX_BUILD_BENCHMARKS)
   FetchContent_Declare(
     googlebenchmark
