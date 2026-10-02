@@ -1,0 +1,17 @@
+# Build
+build/
+cmake-build-*/
+compile_commands.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Snapshots (binary, large)
+*.vecidx

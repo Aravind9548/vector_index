@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "phase-*"]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # -----------------------------------------------------------------------
+  # Release build + tests
+  # -----------------------------------------------------------------------
+  build-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure (Release)
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build -j$(nproc)
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure -j$(nproc)
+
+      - name: Benchmark (smoke, not perf)
+        run: ./build/bench/vecidx_bench --benchmark_min_time=0.01s
+
+  # -----------------------------------------------------------------------
+  # ASan + UBSan
+  # -----------------------------------------------------------------------
+  sanitizer-asan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure (ASan + UBSan)
+        run: >
+          cmake -B build
+          -DCMAKE_BUILD_TYPE=Debug
+          -DVECIDX_ENABLE_ASAN=ON
+          -DVECIDX_BUILD_BENCHMARKS=OFF
+
+      - name: Build
+        run: cmake --build build -j$(nproc)
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure -j$(nproc)
+
+  # -----------------------------------------------------------------------
+  # TSan
+  # -----------------------------------------------------------------------
+  sanitizer-tsan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure (TSan)
+        run: >
+          cmake -B build
+          -DCMAKE_BUILD_TYPE=Debug
+          -DVECIDX_ENABLE_TSAN=ON
+          -DVECIDX_BUILD_BENCHMARKS=OFF
+
+      - name: Build
+        run: cmake --build build -j$(nproc)
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure -j$(nproc)

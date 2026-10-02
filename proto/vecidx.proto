@@ -1,0 +1,94 @@
+// Copyright 2024 VecIdx Authors
+// SPDX-License-Identifier: MIT
+//
+// vecidx.proto — The API contract for the vector index service.
+//
+// Locked parameters (do NOT change without a migration):
+//   Embedding dimension : 1536  (Azure text-embedding-3-small)
+//   Distance metric     : INNER_PRODUCT on L2-normalised vectors (== cosine)
+
+syntax = "proto3";
+
+package vecidx.v1;
+
+option cc_enable_arenas = true;
+
+// ---------------------------------------------------------------------------
+// Core service
+// ---------------------------------------------------------------------------
+service VectorIndex {
+  // Insert or update vectors.  Upsert semantics: if the id already exists the
+  // vector (and metadata) are replaced.
+  rpc Upsert  (UpsertRequest)   returns (UpsertResponse);
+
+  // Top-k approximate (or exact) nearest-neighbour search.
+  rpc Search  (SearchRequest)   returns (SearchResponse);
+
+  // Remove vectors by id.
+  rpc Delete  (DeleteRequest)   returns (DeleteResponse);
+
+  // Write the current index state to persistent storage.
+  rpc Snapshot(SnapshotRequest)  returns (SnapshotResponse);
+}
+
+// ---------------------------------------------------------------------------
+// Upsert
+// ---------------------------------------------------------------------------
+message Vector {
+  string id         = 1;           // stable document / chunk id
+  repeated float values = 2;       // must be exactly 1536 floats
+  map<string, string> metadata = 3; // e.g. {"company_id": "acme-42"}
+}
+
+message UpsertRequest {
+  repeated Vector vectors = 1;
+}
+
+message UpsertResponse {
+  uint32 upserted_count = 1;
+}
+
+// ---------------------------------------------------------------------------
+// Search
+// ---------------------------------------------------------------------------
+message SearchRequest {
+  repeated float query   = 1;   // query vector, 1536 floats
+  uint32         top_k   = 2;   // number of results to return
+  // Optional filter: if set, only vectors whose metadata contains ALL of
+  // these key-value pairs are eligible.  This is the filtered-search
+  // mechanism that prevents cross-company data leakage.
+  map<string, string> filter = 3;
+}
+
+message ScoredResult {
+  string id    = 1;
+  float  score = 2;             // inner-product similarity (higher = closer)
+  map<string, string> metadata = 3;
+}
+
+message SearchResponse {
+  repeated ScoredResult results = 1;
+}
+
+// ---------------------------------------------------------------------------
+// Delete
+// ---------------------------------------------------------------------------
+message DeleteRequest {
+  repeated string ids = 1;
+}
+
+message DeleteResponse {
+  uint32 deleted_count = 1;
+}
+
+// ---------------------------------------------------------------------------
+// Snapshot
+// ---------------------------------------------------------------------------
+message SnapshotRequest {
+  string path = 1;  // filesystem path or blob URI for the snapshot
+}
+
+message SnapshotResponse {
+  uint64 vector_count  = 1;
+  uint64 size_bytes    = 2;
+}
