@@ -1,0 +1,71 @@
+# Azure Container Apps deployment — koreacentral region.
+#
+# Deploy with:
+#   az containerapp create --name vecidx \
+#     --resource-group <rg> \
+#     --environment <env> \
+#     --image <acr>.azurecr.io/vecidx:latest \
+#     --target-port 50051 \
+#     --ingress external \
+#     --cpu 2 --memory 4Gi \
+#     --min-replicas 1 --max-replicas 3 \
+#     --env-vars SNAPSHOT_PATH=/data/snapshots/latest.vecidx \
+#     --yaml deploy/azure-container-app.yaml
+
+properties:
+  configuration:
+    ingress:
+      external: true
+      targetPort: 50051
+      transport: http2  # gRPC requires HTTP/2
+      additionalPortMappings:
+        - external: false
+          targetPort: 8080  # Health endpoint
+    registries:
+      - server: vecidxacr.azurecr.io
+        # Use managed identity in production.
+    secrets: []
+  template:
+    containers:
+      - name: vecidx
+        image: vecidxacr.azurecr.io/vecidx:latest
+        resources:
+          cpu: 2.0
+          memory: 4Gi
+        env:
+          - name: SNAPSHOT_PATH
+            value: /data/snapshots/latest.vecidx
+        # Readiness probe: don't route traffic until the index is loaded.
+        # THIS IS THE COLD START FIX — postmortem #2.
+        probes:
+          - type: readiness
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 60  # Allow up to 5min for large snapshot loads
+          - type: liveness
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 30
+        volumeMounts:
+          - volumeName: snapshot-storage
+            mountPath: /data/snapshots
+    scale:
+      minReplicas: 1
+      maxReplicas: 3
+      rules:
+        - name: cpu-scaling
+          custom:
+            type: cpu
+            metadata:
+              type: Utilization
+              value: "70"
+    volumes:
+      - name: snapshot-storage
+        storageType: AzureFile
+        storageName: vecidx-snapshots
+        # Azure Files share mounted for snapshot persistence.

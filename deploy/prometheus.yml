@@ -1,0 +1,15 @@
+# Prometheus scrape config for VecIdx metrics.
+# Deploy alongside the container or use Azure Monitor.
+scrape_configs:
+  - job_name: vecidx
+    scrape_interval: 15s
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - vecidx:8080
+    # Metrics to track:
+    #   vecidx_ingest_total          — total vectors upserted
+    #   vecidx_query_latency_seconds — histogram of query latency
+    #   vecidx_memory_bytes          — current memory usage
+    #   vecidx_disk_bytes            — snapshot size on disk
+    #   vecidx_index_size            — number of vectors in the index
