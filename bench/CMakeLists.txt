@@ -1,6 +1,7 @@
 # bench/CMakeLists.txt
 add_executable(vecidx_bench
   flat_bench.cpp
+  scale_bench.cpp
 )
 
 target_link_libraries(vecidx_bench
