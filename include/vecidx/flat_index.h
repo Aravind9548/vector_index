@@ -141,6 +141,21 @@ class FlatIndex {
 
   const std::string& IdOf(std::size_t row) const { return row_to_id_.at(row); }
 
+  /// Bulk-load pre-normalised vectors directly (used by snapshot load).
+  /// `vectors` must be n × kEmbeddingDim floats, already L2-normalised.
+  /// `ids` must have exactly n entries.
+  void LoadRaw(const float* vectors, const std::vector<std::string>& ids,
+               std::size_t n) {
+    data_.assign(vectors, vectors + n * kEmbeddingDim);
+    count_ = n;
+    row_to_id_ = ids;
+    id_to_row_.clear();
+    id_to_row_.reserve(n);
+    for (std::size_t i = 0; i < n; ++i) {
+      id_to_row_[ids[i]] = i;
+    }
+  }
+
   // -- Static helpers ---------------------------------------------------------
 
   /// Dot product of two kEmbeddingDim-length vectors.  Naive scalar loop.
