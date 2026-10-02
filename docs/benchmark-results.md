@@ -13,6 +13,8 @@
 | Flat (brute-force) | 10,000 | — | 9.00 | 112 |
 | HNSW | 1,000 | 50 | 4.46 | 235 |
 | HNSW | 1,000 | 200 | 5.62 | 188 |
+| HNSW | 10,000 | 50 | 8.91 | 123 |
+| HNSW | 10,000 | 200 | 25.9 | 40 |
 
 ## Dot Product Kernel
 
@@ -53,4 +55,5 @@
 | Contiguous float array (vs vector<vector<float>>) | N/A (started right) | 0.88ms/1K | — |
 | Naive dot product (1536 floats) | 4,046 ns | — | Baseline |
 | SIMD (AVX2) | Not yet implemented | TBD | TBD |
-| HNSW vs flat at 10K | 9.00ms | TBD (10K HNSW build slow) | TBD |
+| HNSW vs flat at 10K (ef=50) | 9.00ms (flat) | 8.91ms (HNSW) | ~1.0× (graph overhead ≈ flat at this scale) |
+| HNSW build 1K vectors | — | 7.7s | — |
