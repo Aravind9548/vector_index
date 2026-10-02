@@ -3,6 +3,7 @@ add_executable(vecidx_tests
   smoke_test.cpp
   flat_index_test.cpp
   snapshot_test.cpp
+  hnsw_test.cpp
 )
 
 target_link_libraries(vecidx_tests
