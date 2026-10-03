@@ -4,7 +4,7 @@
 //   [Header: 32 bytes]
 //     magic      : 8 bytes  "VECIDX\x01\x00"
 //     version    : uint32   (1)
-//     dimension  : uint32   (1536)
+//     dimension  : uint32   (384)
 //     count      : uint64   (number of vectors)
 //     metric     : uint32   (0 = InnerProduct)
 //     reserved   : 4 bytes  (zeroed)
@@ -32,7 +32,7 @@ namespace vecidx {
 struct SnapshotHeader {
   char     magic[8];      // "VECIDX\x01\x00"
   uint32_t version;       // 1
-  uint32_t dimension;     // 1536
+  uint32_t dimension;     // 384
   uint64_t count;         // number of vectors
   uint32_t metric;        // 0 = InnerProduct
   uint32_t reserved;      // 0

@@ -3,7 +3,7 @@
 #include "vecidx/flat_index.h"
 
 TEST(SmokeTest, DimensionIsLocked) {
-  EXPECT_EQ(vecidx::kEmbeddingDim, 1536u);
+  EXPECT_EQ(vecidx::kEmbeddingDim, 384u);
 }
 
 TEST(SmokeTest, MetricIsInnerProduct) {

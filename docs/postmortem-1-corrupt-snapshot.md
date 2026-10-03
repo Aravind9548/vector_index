@@ -32,7 +32,7 @@ is overwritten.
 **Header validation on load:**
 - Magic bytes: `VECIDX\x01\x00`
 - Version check (reject unknown versions)
-- Dimension match (1536 — catches loading a snapshot from a different model)
+- Dimension match (384 — catches loading a snapshot from a different model)
 - Metric match (InnerProduct)
 
 ## Before / After

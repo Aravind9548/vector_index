@@ -4,7 +4,7 @@
 
 | Parameter          | Value                   | Rationale                                                    |
 |--------------------|-------------------------|--------------------------------------------------------------|
-| Embedding dimension| **1536**                | Azure `text-embedding-3-small` output dimension              |
+| Embedding dimension| **384**                | all-MiniLM-L6-v2 (sentence-transformers) output dimension              |
 | Distance metric    | **Inner Product**       | On L2-normalised vectors, IP = cosine similarity             |
 | Oracle             | FAISS `IndexFlatIP`     | Ground-truth; our results must match exactly (flat) or be measured against it (ANN) |
 
@@ -46,5 +46,5 @@ Single writer thread, concurrent readers.  Stated explicitly so TSan can verify.
 
 ## Data Layout (Phase 1)
 
-Vectors stored as one contiguous `float[N × 1536]` array, row-major.
+Vectors stored as one contiguous `float[N × 384]` array, row-major.
 Not `vector<vector<float>>` — packed for cache locality and SIMD.

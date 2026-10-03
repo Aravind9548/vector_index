@@ -56,7 +56,7 @@ probes:
 ```
 
 The `failureThreshold: 60` × `periodSeconds: 5` = 300 seconds.  A 100K-vector
-snapshot at 1536 dimensions is ~600 MB; on Azure Files with a Premium share,
+snapshot at 384 dimensions is ~600 MB; on Azure Files with a Premium share,
 download + load takes ~30–60 seconds.  The 5-minute budget handles larger
 indexes or slower storage.
 

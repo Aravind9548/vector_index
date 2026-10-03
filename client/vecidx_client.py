@@ -8,8 +8,8 @@ Usage:
     from vecidx_client import VecIdxClient
 
     client = VecIdxClient("localhost:50051")
-    client.upsert("doc-1", [0.1] * 1536, {"company_id": "acme"})
-    results = client.search([0.1] * 1536, top_k=10, filter={"company_id": "acme"})
+    client.upsert("doc-1", [0.1] * 384, {"company_id": "acme"})
+    results = client.search([0.1] * 384, top_k=10, filter={"company_id": "acme"})
     client.delete(["doc-1"])
     client.snapshot("/data/snapshot.vecidx")
     print(client.health("localhost:8080"))

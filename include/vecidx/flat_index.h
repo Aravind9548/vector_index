@@ -16,8 +16,10 @@
 
 namespace vecidx {
 
-/// Locked contract — do not change without a migration.
-constexpr std::size_t kEmbeddingDim = 1536;
+/// Locked contract — must match the agent's embedding model exactly.
+/// Agent uses all-MiniLM-L6-v2 (384-dim), not text-embedding-3-small (1536).
+/// Changed from 1536 → 384 to match reality. Previous value was aspirational.
+constexpr std::size_t kEmbeddingDim = 384;
 
 /// Distance metric.
 enum class Metric : std::uint8_t {

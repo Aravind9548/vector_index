@@ -4,7 +4,7 @@
 // vecidx.proto — The API contract for the vector index service.
 //
 // Locked parameters (do NOT change without a migration):
-//   Embedding dimension : 1536  (Azure text-embedding-3-small)
+//   Embedding dimension : 384  (all-MiniLM-L6-v2)
 //   Distance metric     : INNER_PRODUCT on L2-normalised vectors (== cosine)
 
 syntax = "proto3";
@@ -36,7 +36,7 @@ service VectorIndex {
 // ---------------------------------------------------------------------------
 message Vector {
   string id         = 1;           // stable document / chunk id
-  repeated float values = 2;       // must be exactly 1536 floats
+  repeated float values = 2;       // must be exactly 384 floats
   map<string, string> metadata = 3; // e.g. {"company_id": "acme-42"}
 }
 
@@ -52,7 +52,7 @@ message UpsertResponse {
 // Search
 // ---------------------------------------------------------------------------
 message SearchRequest {
-  repeated float query   = 1;   // query vector, 1536 floats
+  repeated float query   = 1;   // query vector, 384 floats
   uint32         top_k   = 2;   // number of results to return
   // Optional filter: if set, only vectors whose metadata contains ALL of
   // these key-value pairs are eligible.  This is the filtered-search

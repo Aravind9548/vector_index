@@ -80,7 +80,7 @@ class FAISSBackend(RetrievalBackend):
     that VecIdxBackend must match.
     """
 
-    def __init__(self, dimension: int = 1536):
+    def __init__(self, dimension: int = 384):
         try:
             import faiss
         except ImportError:

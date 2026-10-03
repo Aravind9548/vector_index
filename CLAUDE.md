@@ -5,7 +5,7 @@ A C++17 vector similarity search engine, built from scratch as a learning projec
 It will be integrated into a Due Diligence Agent as an alternative to FAISS.
 
 ## Locked parameters
-- Embedding dimension: **1536** (Azure text-embedding-3-small)
+- Embedding dimension: **384** (all-MiniLM-L6-v2)
 - Distance metric: **Inner Product** on L2-normalised vectors (= cosine)
 - Oracle: **FAISS IndexFlatIP** — our ground truth
 
@@ -42,5 +42,5 @@ docs/           design docs, postmortems
 ## Rules
 - Every phase gates on its test before moving on.
 - Flat index top-10 must match FAISS IndexFlatIP **exactly**, not approximately.
-- Vectors are stored as contiguous float arrays [N × 1536], row-major.
+- Vectors are stored as contiguous float arrays [N × 384], row-major.
 - Concurrency model: single writer, concurrent readers.

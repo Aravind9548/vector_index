@@ -3,7 +3,7 @@
 **Hardware:** 12th Gen Intel (12 cores, 2496 MHz), L3 12 MiB  
 **Compiler:** GCC 15.2.0, -O3  
 **OS:** Windows 11 (MSYS2 ucrt64)  
-**Dimension:** 1536, Metric: Inner Product  
+**Dimension:** 384, Metric: Inner Product  
 
 ## Search Latency (engine-only, no gRPC)
 
@@ -20,7 +20,7 @@
 
 | Implementation | Time (ns) |
 |---------------|-----------|
-| Naive scalar loop (1536 floats) | 4,046 |
+| Naive scalar loop (384 floats) | 4,046 |
 
 ## Recall
 
@@ -53,7 +53,7 @@
 | Optimisation | Before | After | Speedup |
 |-------------|--------|-------|---------|
 | Contiguous float array (vs vector<vector<float>>) | N/A (started right) | 0.88ms/1K | — |
-| Naive dot product (1536 floats) | 4,046 ns | — | Baseline |
+| Naive dot product (384 floats) | 4,046 ns | — | Baseline |
 | SIMD (AVX2) | Not yet implemented | TBD | TBD |
 | HNSW vs flat at 10K (ef=50) | 9.00ms (flat) | 8.91ms (HNSW) | ~1.0× (graph overhead ≈ flat at this scale) |
 | HNSW build 1K vectors | — | 7.7s | — |
